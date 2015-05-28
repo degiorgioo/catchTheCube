@@ -21,10 +21,7 @@
 }
 
 #target{
-    height: 20px;
-    width: 20px;
     position: relative;
-    background: red;
     margin: 0;
 }
 
