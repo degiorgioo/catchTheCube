@@ -18,7 +18,7 @@
         showScoreValue = $("#score");
         showTime = $("#time");
         time = 120000;
-        timeInSeconds = 120000/1000;
+        timeInSeconds = Number((120000/1000)-1);
         posY = 0;
         posX = 0;
         moveInterval = 10;
@@ -31,8 +31,9 @@
         finishGame = setInterval(finishGameFunc, time);
         levelUp = setInterval(levelUpFunc, 1000);
 
+        updateTimeTable();
+        setCatcherPosition();
         setTargetPosition();
-
 
         $(document).keydown(function(e) {
             switch(e.which) {
@@ -52,8 +53,17 @@
                     clearInterval(actualInterval);
                     moveDown();
                     break;
-                case 13:
+                case 32:
                     clearInterval(actualInterval);
+                    console.log((posX+10 >= randomX && posX-10 <= randomX) && (posY+10 >= randomY && posY-10 <= randomY));
+                    console.log("X: " + (posX+10 >= randomX && posX-10 <= randomX));
+                    console.log("Y: " + (posY+30 >= randomY && posY-30 <= randomY));
+                    console.log("Y+10 catcher: " + Number(posY+30));
+                    console.log("Y-10 catcher: " + Number(posY-30));
+                    console.log("X+10 catcher: " + Number(posX+10));
+                    console.log("X-10 catcher: " + Number(posX-10));
+                    console.log("Y target : " + Number(randomY));
+                    console.log("X target : " + Number(randomX));
                     break;
             }
         });
@@ -61,7 +71,7 @@
 
     var updateTables = function(){
         showPosCatcherX.text("Position X: " + posX);
-        showPosCatcherY.text("Position Y: " + Number(posY-20));
+        showPosCatcherY.text("Position Y: " + posY);
         showPosTargX.text("Position X: " + randomX);
         showPosTargY.text("Position Y: " + randomY);
         showScoreValue.text("Your score: " + scoreValue);
@@ -72,6 +82,11 @@
         randomY = Math.floor((Math.random() * 600) + 50);
         target.css("top", randomY);
         target.css("left",randomX);
+    };
+
+    var setCatcherPosition = function(){
+        catcher.css("left", posX);
+        catcher.css("top", posY);
     };
 
     var updateTimeTable = function(){
@@ -100,7 +115,7 @@
 
     var moveDown = function(){
         actualInterval = setInterval(function(){
-            if(posY < 680){
+            if(posY <= 680){
                 catcher.css("top", posY++);
             }else{
                 clearInterval(actualInterval);
@@ -139,7 +154,8 @@
     };
 
     var checkIfCatched = function(){
-        if((posX === randomX && posY=== randomY)||((posX+10 >= randomX && posX-10 <= randomX) && (posY+10 >= randomY && posY-10 <= randomY))){
+        if((posX === randomX && posY=== randomY)||
+            ((posX+10 >= randomX && posX-10 <= randomX) && (posY+30 >= randomY && posY-30 <= randomY))){
             scoreValue++;
             setTargetPosition();
       }
